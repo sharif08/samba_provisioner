@@ -1,0 +1,33 @@
+# Registry
+registry:
+  local: index.docker.io
+
+#-----------------
+# Provisioner Setting
+#-----------------
+systemConfig:
+  # systemConfig.imagePullSecrets defines the secret name for image pulling 
+  imagePullSecrets: []
+
+provisioner:
+
+  replicas: 1
+
+  # Image Tag 
+  image:
+    name:  your-build-image
+    tag: smb-release-08-11-2022_05
+
+  securityContext:
+    privileged: true
+
+
+  # Resource Limit Settings for Provisioner Pod
+  resources:
+    requests:
+      memory: '50Mi'
+      cpu: '100m'
+
+    limits:
+      memory: '150Mi'
+      cpu: '200m'

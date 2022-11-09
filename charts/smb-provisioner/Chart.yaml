@@ -1,0 +1,10 @@
+#
+# Globla Chart file
+apiVersion: v2
+name: smb-provisioner
+version: 0.0.1
+
+
+maintainers:
+- email: rahman.sharif@playtech.com
+  name: Sharif

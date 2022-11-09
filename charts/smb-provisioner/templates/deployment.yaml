@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    component: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.provisioner.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      tolerations:
+      - operator: "Exists"
+      imagePullSecrets:
+        - name: pcr-pbs-one
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.provisioner.image.name }}:{{ .Values.provisioner.image.tag }}
+          imagePullPolicy: IfNotPresent
+          command: ["sleep", "123456"]
+          securityContext:
+            {{- toYaml .Values.provisioner.securityContext | nindent 12 }}
+          volumeMounts:
+          - name:  {{ .Chart.Name }}-secrets
+            mountPath: /app/smbconfig/.env
+            subPath: .env
+      volumes:
+      #- name: {{ .Chart.Name }}-config
+      #  configMap:
+      #    name: {{ .Chart.Name }}-initialization
+      #    defaultMode: 0744
+      - name: {{ .Chart.Name }}-ssl
+        secret:
+          secretName: {{ .Chart.Name }}-secrets
